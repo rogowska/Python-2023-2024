@@ -93,12 +93,27 @@ print(c)
 
 arabic = []
 num = "CDXLIV"
-roman = {'I': 1, 'V': 5, 'X': 10, 'L': 50, 'C': 100, 'D': 500, 'M': 1000}
-roman2 = {'I': 1, 'V': 5, 'X': 10, 'L': 50, 'C': 100, 'D': 500, 'M': 1000, 'IV': 4, 'IX': 9, 'XL': 40, 'XC': 90, 'CD': 400, 'CM': 900}
+roman1 = ['I', 'V', 'X', 'L', 'C', 'D', 'M']
+arabic1 = [1, 5, 10, 50, 100, 500, 1000]
 
-#1st way
+#ways to create a dictionary
+#1 using dict comprehension
+myDict = {roman1[i]: arabic1[i] for i in range(len(roman1))}
+print("1st method creating dictionary: ", myDict)
+
+#2 using dict constructor
+myDict = dict(I=1, V=5, X=10, L=50, C=100, D=500, M=1000)
+print("2nd method creating dictionary: ", myDict)
+
+#3 explicitly
+
+roman2 = {'I': 1, 'V': 5, 'X': 10, 'L': 50, 'C': 100, 'D': 500, 'M': 1000}
+roman3 = {'I': 1, 'V': 5, 'X': 10, 'L': 50, 'C': 100, 'D': 500, 'M': 1000, 'IV': 4, 'IX': 9, 'XL': 40, 'XC': 90, 'CD': 400, 'CM': 900}
+print("3rd method creating dictionary: ", roman2)
+
+#1st way to get the arabic number using dict
 for x in num:
-    arabic.append(roman[x])
+    arabic.append(roman2[x])
 
 for y in range(len(arabic)-1):
     if (arabic[y] < arabic[y+1]):
@@ -108,24 +123,21 @@ for y in range(len(arabic)-1):
 result = sum(x for x in arabic)
 print("Arabic number: ", result)
 
-#2nd way
+#2nd way to get the number using dict
 result = 0
 
 while num:
     # try first two chars
-    if num[:2] in roman2:
-        result += roman2[num[:2]]
+    if num[:2] in roman3:
+        result += roman3[num[:2]]
         # cut off first two chars
         num = num[2:]
     else:
-        result += roman2[num[:1]]
+        result += roman3[num[:1]]
         # cut off first char
         num = num[1:]
 
 print("Arabic number (2nd method): ", result)
-
-
-
 
 
 
