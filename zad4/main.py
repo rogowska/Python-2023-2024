@@ -7,14 +7,26 @@
 
 # zad 4.2
 
-# def ruler(length: int):
-#    ruler = ("|...." * length, end="|")
-#    print()
-#    for x in range(length + 1):
-#        print(x, end=' ' * (5 - len(str(x + 1))))
-#
-#    print("\n")
-#    return ruler
+def ruler(length: int):
+    ruler1 = str(print("|...." * length, end="|"))
+    ruler1.join(str(print()))
+    for x in range(length + 1):
+        ruler1.join(str(print(x, end=' ' * (5 - len(str(x + 1))))))
+    ruler1.join(str(print("\n")))
+    return ruler1
+
+
+def net(height: int, width: int):
+    net1 = ""
+    for h in range(height):
+        net1.join(str(print("+---" * width, end="*")))
+        net1.join(str(print()))
+        net1.join(str(print("|   " * width, end="|")))
+        net1.join(str(print()))
+    net1.join(str(print("*---" * width, end="*")))
+    net1.join(str(print()))
+    return net1
+
 
 # zad 4.3
 def factorial(n: int):
@@ -62,12 +74,10 @@ def sum_seq(sequence):
 
 
 # zad 4.7
-#def flatten(sequence):
-#    if len(sequence) == 0:
-#        return 0
-#    elif isinstance(sequence[0], (list, tuple)):
-#        return flatten(sequence[0]) + flatten(sequence[1:])
-#    else:
-#        return sequence[0] sum_seq(sequence[1:])]
-
-#print([1,(2,3),[],[4,(5,6,7)],8,[9]])
+def flatten(sequence):
+    if not (bool(sequence)):
+        return sequence
+    elif isinstance(sequence[0], (list, tuple)):
+        return list(flatten(sequence[0])) + list(flatten(sequence[1:]))
+    else:
+        return sequence[:1] + flatten(sequence[1:])
