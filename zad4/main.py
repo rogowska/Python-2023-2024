@@ -8,6 +8,8 @@
 # zad 4.2
 
 def ruler(length: int):
+    if length <= 0 or not isinstance(length, int):
+        raise ValueError("Please provide positive integer number greater than 0.")
     ruler1 = str(print("|...." * length, end="|"))
     ruler1.join(str(print()))
     for x in range(length + 1):
@@ -17,6 +19,8 @@ def ruler(length: int):
 
 
 def net(height: int, width: int):
+    if height <= 0 or width <= 0 or not isinstance(height, int) or not isinstance(width, int):
+        raise ValueError("Please provide positive integer numbers greater than 0")
     net1 = ""
     for h in range(height):
         net1.join(str(print("+---" * width, end="*")))
