@@ -7,7 +7,8 @@ def error_check(frac1, frac2):
         raise TypeError("Provided arguments must be lists.")
     if not len(frac1) == 2 or not len(frac2) == 2:
         raise ValueError("Argument lists must be length of 2.")
-    if not isinstance(frac1[0], int) or not isinstance(frac1[1], int) or not isinstance(frac2[0], int) or not isinstance(
+    if not isinstance(frac1[0], int) or not isinstance(frac1[1], int) or not isinstance(frac2[0],
+                                                                                        int) or not isinstance(
             frac2[1], int):
         raise ValueError("Elements of lists must be integers.")
     if frac1[1] == 0 or frac2[1] == 0:
@@ -71,7 +72,8 @@ def div_frac(frac1, frac2):
 
 def is_positive(frac):
     error_check2(frac)
-    if frac[0] == 0 or (frac[0] > 0 and frac[1] > 0):
+    frac = minus_unification(frac)
+    if frac[0] >= 0:
         return True
     else:
         return False
@@ -101,6 +103,7 @@ def cmp_frac(frac1, frac2):
 
 def frac2float(frac):
     error_check2(frac)
+    frac = minus_unification(frac)
     return float(frac[0] / frac[1])
 
 
@@ -124,7 +127,7 @@ class TestFractions(unittest.TestCase):
         self.assertEqual(mul_frac([-1, 4], [-3, 4]), [3, 16])
         self.assertEqual(mul_frac([-1, 3], [3, -4]), [3, 12])
         self.assertEqual(mul_frac([5, 12], [3, -1]), [-15, 12])
-        self.assertRaises(TypeError, mul_frac, self.not_a_list, self.not_a_list )
+        self.assertRaises(TypeError, mul_frac, self.not_a_list, self.not_a_list)
         self.assertRaises(ValueError, mul_frac, self.wrong_argument_numbers, self.wrong_argument_numbers)
         self.assertRaises(ValueError, mul_frac, self.not_integers, self.not_integers)
         self.assertRaises(ValueError, mul_frac, self.zero_denominator, self.zero_denominator)
@@ -140,13 +143,49 @@ class TestFractions(unittest.TestCase):
         self.assertRaises(ValueError, div_frac, self.zero_denominator, self.zero_denominator)
         self.assertRaises(ValueError, div_frac, [3, 4], self.zero)
 
-    def test_is_positive(self): pass
+    def test_is_positive(self):
+        self.assertFalse(is_positive([1, -1]))
+        self.assertFalse(is_positive([-1, 1]))
+        self.assertTrue(is_positive([-4, -9]))
+        self.assertTrue(is_positive([9, 7]))
+        self.assertTrue(is_positive(self.zero))
+        self.assertRaises(TypeError, is_positive, self.not_a_list)
+        self.assertRaises(ValueError, is_positive, self.wrong_argument_numbers)
+        self.assertRaises(ValueError, is_positive, self.not_integers)
+        self.assertRaises(ValueError, is_positive, self.zero_denominator)
 
-    def test_is_zero(self): pass
+    def test_is_zero(self):
+        self.assertFalse(is_zero([1, -1]))
+        self.assertFalse(is_zero([-1, 1]))
+        self.assertFalse(is_zero([-4, -9]))
+        self.assertFalse(is_zero([9, 7]))
+        self.assertTrue(is_zero(self.zero))
+        self.assertRaises(ValueError, is_zero, [0, 0])
+        self.assertRaises(TypeError, is_zero, self.not_a_list)
+        self.assertRaises(ValueError, is_zero, self.wrong_argument_numbers)
+        self.assertRaises(ValueError, is_zero, self.not_integers)
+        self.assertRaises(ValueError, is_zero, self.zero_denominator)
 
-    def test_cmp_frac(self): pass
+    def test_cmp_frac(self):
+        self.assertEqual(cmp_frac([1, 5], [3, 2]), -1)
+        self.assertEqual(cmp_frac([-1, 4], [-3, 4]), 1)
+        self.assertEqual(cmp_frac([-1, 3], [3, -4]), 1)
+        self.assertEqual(cmp_frac([5, 12], [-5, -12]), 0)
+        self.assertRaises(TypeError, cmp_frac, self.not_a_list, self.not_a_list)
+        self.assertRaises(ValueError, cmp_frac, self.wrong_argument_numbers, self.wrong_argument_numbers)
+        self.assertRaises(ValueError, cmp_frac, self.not_integers, self.not_integers)
+        self.assertRaises(ValueError, cmp_frac, self.zero_denominator, self.zero_denominator)
 
-    def test_frac2float(self): pass
+    def test_frac2float(self):
+        self.assertEqual(frac2float([3, 4]), 0.75)
+        self.assertEqual(frac2float([3, -4]), -0.75)
+        self.assertAlmostEqual(frac2float([1, 3]), 0.333, places=3)
+        self.assertEqual(frac2float(self.zero), 0.0)
+        self.assertRaises(ValueError, frac2float, [0, 0])
+        self.assertRaises(TypeError, frac2float, self.not_a_list)
+        self.assertRaises(ValueError, frac2float, self.wrong_argument_numbers)
+        self.assertRaises(ValueError, frac2float, self.not_integers)
+        self.assertRaises(ValueError, frac2float, self.zero_denominator)
 
     def tearDown(self): pass
 
