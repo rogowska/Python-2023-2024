@@ -1,3 +1,12 @@
+###################
+# Oliwia Rogowska #
+#    Zadanie 5    #
+#     Python      #
+#   10.11.2023    #
+###################
+
+# zad 5.2
+
 import math
 import unittest
 
@@ -8,11 +17,12 @@ def error_check(frac1, frac2):
     if not len(frac1) == 2 or not len(frac2) == 2:
         raise ValueError("Argument lists must be length of 2.")
     if not isinstance(frac1[0], int) or not isinstance(frac1[1], int) or not isinstance(frac2[0],
-                                                                                        int) or not isinstance(
-            frac2[1], int):
+                                                                                        int) or not isinstance(frac2[1],
+                                                                                                               int):
         raise ValueError("Elements of lists must be integers.")
-    if frac1[1] == 0 or frac2[1] == 0:
-        raise ValueError("Denominator value cannot equal 0.")
+    if frac1[1] != 0 and frac2[1] != 0:
+        return
+    raise ValueError("Denominator value cannot equal 0.")
 
 
 def error_check2(frac1):
@@ -39,7 +49,7 @@ def minus_unification(frac):
 def add_frac(frac1, frac2):
     error_check(frac1, frac2)
     gcd = math.gcd(frac1[1], frac2[1])
-    common_den = frac1[0] * frac2[0] // gcd
+    common_den = frac1[1] * frac2[1] // gcd
     frac3 = [frac1[0] * (common_den // frac1[1]) + frac2[0] * (common_den // frac2[1]), common_den]
     frac3 = minus_unification(frac3)
     return frac3
@@ -48,7 +58,7 @@ def add_frac(frac1, frac2):
 def sub_frac(frac1, frac2):
     error_check(frac1, frac2)
     gcd = math.gcd(frac1[1], frac2[1])
-    common_den = frac1[0] * frac2[0] // gcd
+    common_den = frac1[1] * frac2[1] // gcd
     frac3 = [frac1[0] * common_den // frac1[1] - frac2[0] * common_den // frac2[1], common_den]
     frac3 = minus_unification(frac3)
     return frac3
@@ -117,10 +127,24 @@ class TestFractions(unittest.TestCase):
         self.zero_denominator = [5, 0]
 
     def test_add_frac(self):
-        self.assertEqual(add_frac([1, 2], [1, 3]), [5, 6])
-        self.assertEqual(add_frac([-8, 4], [2, -5]), [-12, 5])
+        self.assertEqual(add_frac([1, 5], [3, 2]), [17, 10])
+        self.assertEqual(add_frac([-1, 4], [-3, 4]), [-4, 4])
+        self.assertEqual(add_frac([-1, 3], [3, -4]), [-13, 12])
+        self.assertEqual(add_frac([5, 12], [3, -1]), [-31, 12])
+        self.assertRaises(TypeError, add_frac, self.not_a_list, self.not_a_list)
+        self.assertRaises(ValueError, add_frac, self.wrong_argument_numbers, self.wrong_argument_numbers)
+        self.assertRaises(ValueError, add_frac, self.not_integers, self.not_integers)
+        self.assertRaises(ValueError, add_frac, self.zero_denominator, self.zero_denominator)
 
-    def test_sub_frac(self): pass
+    def test_sub_frac(self):
+        self.assertEqual(sub_frac([1, 5], [3, 2]), [-13, 10])
+        self.assertEqual(sub_frac([-1, 4], [-3, 4]), [2, 4])
+        self.assertEqual(sub_frac([-1, 3], [3, -4]), [5, 12])
+        self.assertEqual(sub_frac([5, 12], [3, -1]), [41, 12])
+        self.assertRaises(TypeError, sub_frac, self.not_a_list, self.not_a_list)
+        self.assertRaises(ValueError, sub_frac, self.wrong_argument_numbers, self.wrong_argument_numbers)
+        self.assertRaises(ValueError, sub_frac, self.not_integers, self.not_integers)
+        self.assertRaises(ValueError, sub_frac, self.zero_denominator, self.zero_denominator)
 
     def test_mul_frac(self):
         self.assertEqual(mul_frac([1, 5], [3, 2]), [3, 10])
