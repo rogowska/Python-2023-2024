@@ -37,10 +37,7 @@ def error_check2(frac1):
 
 
 def minus_unification(frac):
-    if frac[0] < 0 and frac[1] < 0:
-        frac[0] = abs(frac[0])
-        frac[1] = abs(frac[1])
-    if frac[0] > 0 > frac[1]:
+    if frac[1] < 0:
         frac[1] = abs(frac[1])
         frac[0] = -frac[0]
     return frac
@@ -83,18 +80,12 @@ def div_frac(frac1, frac2):
 def is_positive(frac):
     error_check2(frac)
     frac = minus_unification(frac)
-    if frac[0] >= 0:
-        return True
-    else:
-        return False
+    return frac[0] >= 0
 
 
 def is_zero(frac):
     error_check2(frac)
-    if frac[0] == 0:
-        return True
-    else:
-        return False
+    return frac[0] == 0
 
 
 def cmp_frac(frac1, frac2):
