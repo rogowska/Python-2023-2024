@@ -19,7 +19,7 @@ class Point:
         return "(" + str(self.x) + ", " + str(self.y) + ")"
 
     def __repr__(self):
-        return "Point(" + str(self.x) + ", " + str(self.y) + ")"
+        return "Point" + str(self)
 
     def __eq__(self, other):
         return (self.x, self.y) == (other.x, other.y)
