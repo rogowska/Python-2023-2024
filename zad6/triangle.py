@@ -4,7 +4,7 @@
 #   14.11.2023    #
 ###################
 
-
+import unittest
 from points import Point
 
 
@@ -17,12 +17,12 @@ class Triangle:
         self.pt3 = Point(x3, y3)
 
     def __str__(self):
-        return ("[(" + str(self.pt1.x) + ", " + str(self.pt1.y) + "), " + str(self.pt2.x) + ", " + str(self.pt2.y)
-                + "), " + str(self.pt3.x) + ", " + str(self.pt3.y) + ")]")
+        return ("[(" + str(self.pt1.x) + ", " + str(self.pt1.y) + "), (" + str(self.pt2.x) + ", " + str(self.pt2.y)
+                + "), (" + str(self.pt3.x) + ", " + str(self.pt3.y) + ")]")
 
     def __repr__(self):
         return ("Triangle(" + str(self.pt1.x) + ", " + str(self.pt1.y) + ", " + str(self.pt2.x) + ", " + str(self.pt2.y)
-                + ", " + str(self.pt3.x) + str(self.pt3.y) + ")")
+                + ", " + str(self.pt3.x) + ", " + str(self.pt3.y) + ")")
 
     def __eq__(self, other):
         list1 = ((self.pt1.x, self.pt1.y), (self.pt2.x, self.pt2.y), (self.pt3.x, self.pt3.y))
@@ -33,24 +33,24 @@ class Triangle:
         return not self == other
 
     def center(self):
-        return Point(1 / 3 * (self.pt1.x + self.pt2.x + self.pt3.x), 1 / 3 * (self.pt1.y + self.pt2.y + self.pt3.y))
+        sum_point = self.pt1 + self.pt2 + self.pt3
+        sum_point.x = round(sum_point.x / 3, 3)
+        sum_point.y = round(sum_point.y / 3, 3)
+        return sum_point
 
     def area(self):
-        return 1 / 2 * abs((self.pt2.x - self.pt1.x) * (self.pt3.y - self.pt1.y) - (self.pt2.x - self.pt1.x)
-                           * (self.pt3.x - self.pt3.x))
+        return 1 / 2 * abs(self.pt1.x * (self.pt2.y - self.pt3.y) + self.pt2.x * (self.pt3.y - self.pt1.y)
+                           + self.pt3.x * (self.pt1.y - self.pt2.y))
 
+    # move implemented that it manipulate with object variables
     def move(self, x, y):
         for key, value in self.__dict__.items():
             if isinstance(value, Point):
-                value += Point(x, y)
+                setattr(self, key, value + Point(x, y))
         return self
 
 
-
 # Kod testujący moduł.
-
-import unittest
-
 
 class TestTriangle(unittest.TestCase):
 
@@ -60,15 +60,42 @@ class TestTriangle(unittest.TestCase):
         self.myTriangle3 = Triangle(2, 0, 4, 9, -8, -1)
         self.myTriangle4 = Triangle(1, 3, 4, 5, -5, 1)
 
+    def test__str__(self):
+        self.assertEqual(str(self.myTriangle), "[(1, 3), (4, 5), (-5, 1)]")
+        self.assertEqual(str(self.myTriangle2), "[(0, 0), (-6, 9), (-5, 8)]")
+        self.assertEqual(str(self.myTriangle3), "[(2, 0), (4, 9), (-8, -1)]")
+
+    def test__repr__(self):
+        self.assertEqual(repr(self.myTriangle), "Triangle(1, 3, 4, 5, -5, 1)")
+        self.assertEqual(repr(self.myTriangle2), "Triangle(0, 0, -6, 9, -5, 8)")
+        self.assertEqual(repr(self.myTriangle3), "Triangle(2, 0, 4, 9, -8, -1)")
+
     def test__eq__(self):
         self.assertTrue(self.myTriangle == self.myTriangle4)
         self.assertFalse(self.myTriangle2 == self.myTriangle3)
         self.assertFalse(self.myTriangle3 == self.myTriangle4)
 
+    def test__ne__(self):
+        self.assertFalse(self.myTriangle != self.myTriangle4)
+        self.assertTrue(self.myTriangle2 != self.myTriangle3)
+        self.assertTrue(self.myTriangle3 != self.myTriangle4)
+
+    def test_center(self):
+        self.assertEqual(self.myTriangle.center(), Point(0, 3))
+        self.assertEqual(self.myTriangle2.center(), Point(-3.667, 5.667))
+        self.assertEqual(self.myTriangle3.center(), Point(-0.667, 2.667))
+
+    def test_area(self):
+        self.assertEqual(self.myTriangle.area(), 3)
+        self.assertEqual(self.myTriangle2.area(), 1.5)
+        self.assertEqual(self.myTriangle3.area(), 44)
+
     def test_move(self):
-        self.assertTrue(Triangle.move(self.myTriangle, 3, 3), Triangle(4, 6, 7, 8, -2, 4))
-        # self.assertEqual(str(self.myPoint2), "(-2, 5)")
-        # self.assertEqual(str(self.myPoint3), "(5, -10)")
+        self.assertEqual(self.myTriangle.move(3, 3), Triangle(4, 6, 7, 8, -2, 4))
+        self.assertEqual(self.myTriangle2.move(-2, 0), Triangle(-2, 0, -8, 9, -7, 8))
+        self.assertEqual(self.myTriangle3.move(9, -3), Triangle(11, -3, 13, 6, 1, -4))
+        self.assertEqual(self.myTriangle3.move(0, 5), Triangle(11, 2, 13, 11, 1, 1))
+
 
 if __name__ == '__main__':
     unittest.main()
