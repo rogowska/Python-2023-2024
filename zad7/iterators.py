@@ -1,7 +1,7 @@
 # Oliwia Rogowska #
 #    Zadanie 7    #
 #     Python      #
-#   15.11.2023    #
+#   21.11.2023    #
 ###################
 import itertools
 import random
