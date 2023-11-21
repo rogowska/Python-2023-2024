@@ -12,6 +12,9 @@ class Triangle:
     """Klasa reprezentująca trójkąt na płaszczyźnie."""
 
     def __init__(self, x1, y1, x2, y2, x3, y3):
+        #if the slope of lines joining two pairs of points is the same, points are collinear
+        if (y3 - y2) * (x2 - x1) == (y2 - y1) * (x3 - x2):
+            raise ValueError("Points are collinear")
         self.pt1 = Point(x1, y1)
         self.pt2 = Point(x2, y2)
         self.pt3 = Point(x3, y3)
@@ -48,6 +51,19 @@ class Triangle:
             if isinstance(value, Point):
                 setattr(self, key, value + Point(x, y))
         return self
+
+    def make4(self):
+        pt12x = (self.pt1.x - self.pt2.x) / 2
+        pt12y = (self.pt1.y - self.pt2.y) / 2
+        pt23x = (self.pt2.x - self.pt3.x) / 2
+        pt23y = (self.pt2.y - self.pt3.y) / 2
+        pt31x = (self.pt3.x - self.pt1.x) / 2
+        pt31y = (self.pt3.y - self.pt1.y) / 2
+        return tuple(Triangle(pt12x, pt12y, pt23x, pt23y, pt31x, pt31y),
+                     Triangle(self.pt1.x, self.pt1.y, pt12x, pt12y, pt31x, pt31y),
+                     Triangle(self.pt2.x, self.pt2.y, pt23x, pt23y, pt12x, pt12y),
+                     Triangle(self.pt3.x, self.pt3.y, pt23x, pt23y, pt31x, pt31y) )
+
 
 
 # Kod testujący moduł.
@@ -95,6 +111,8 @@ class TestTriangle(unittest.TestCase):
         self.assertEqual(self.myTriangle2.move(-2, 0), Triangle(-2, 0, -8, 9, -7, 8))
         self.assertEqual(self.myTriangle3.move(9, -3), Triangle(11, -3, 13, 6, 1, -4))
         self.assertEqual(self.myTriangle3.move(0, 5), Triangle(11, 2, 13, 11, 1, 1))
+
+    def test_make4(self): pass
 
 
 if __name__ == '__main__':
