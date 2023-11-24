@@ -37,8 +37,8 @@ class Triangle:
 
     def center(self):
         sum_point = self.pt1 + self.pt2 + self.pt3
-        sum_point.x = round(sum_point.x / 3, 3)
-        sum_point.y = round(sum_point.y / 3, 3)
+        sum_point.x = sum_point.x / 3
+        sum_point.y = sum_point.y / 3
         return sum_point
 
     def area(self):
@@ -102,9 +102,9 @@ class TestTriangle(unittest.TestCase):
         self.assertTrue(self.myTriangle3 != self.myTriangle4)
 
     def test_center(self):
-        self.assertEqual(self.myTriangle.center(), Point(0, 3))
-        self.assertEqual(self.myTriangle2.center(), Point(-3.667, 5.667))
-        self.assertEqual(self.myTriangle3.center(), Point(-0.667, 2.667))
+        self.assertTrue(round(self.myTriangle.center().x, 3) == 0 and round(self.myTriangle.center().y, 3) == 3)
+        self.assertTrue(round(self.myTriangle2.center().x, 3) == -3.667 and round(self.myTriangle2.center().y, 3) == 5.667)
+        self.assertTrue(round(self.myTriangle3.center().x, 3) == -0.667 and round(self.myTriangle3.center().y, 3) == 2.667)
 
     def test_area(self):
         self.assertEqual(self.myTriangle.area(), 3)
