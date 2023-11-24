@@ -67,6 +67,13 @@ class Triangle:
 
 # Kod testujący moduł.
 
+def make4TestMethod(myTriangle, triangleTuple):
+    for triangle in myTriangle.make4():
+        if triangle not in triangleTuple:
+            print(triangle)
+            assert False
+
+
 class TestTriangle(unittest.TestCase):
 
     def setUp(self):
@@ -112,12 +119,20 @@ class TestTriangle(unittest.TestCase):
         self.assertEqual(self.myTriangle3.move(0, 5), Triangle(11, 2, 13, 11, 1, 1))
 
     def test_make4(self):
-        for triangle in self.myTriangle.make4():
-            if triangle not in (Triangle(-5, 1, -2, 2, -0.5, 3),
-                                Triangle(-2, 2, -0.5, 3, 2.5, 4),
-                                Triangle(1, 3, -2, 2, 2.5, 4),
-                                Triangle(4, 5, -0.5, 3, 2.5, 4)):
-                raise Exception
+        make4TestMethod(self.myTriangle, (Triangle(-5, 1, -2, 2, -0.5, 3),
+                                          Triangle(-2, 2, -0.5, 3, 2.5, 4),
+                                          Triangle(1, 3, -2, 2, 2.5, 4),
+                                          Triangle(4, 5, -0.5, 3, 2.5, 4)))
+
+        make4TestMethod(self.myTriangle2, (Triangle(-5.5, 8.5, -3, 4.5, -2.5, 4),
+                                           Triangle(0, 0, -2.5, 4, -3, 4.5),
+                                           Triangle(-5, 8, -2.5, 4, -5.5, 8.5),
+                                           Triangle(-3, 4.5, -6, 9, -5.5, 8.5)))
+
+        make4TestMethod(self.myTriangle3, (Triangle(-3, -0.5, 3, 4.5, -2, 4),
+                                           Triangle(-8, -1, -3, -0.5, -2, 4),
+                                           Triangle(-3, -0.5, 2, 0, 3, 4.5),
+                                           Triangle(4, 9, -2, 4, 3, 4.5)))
 
 
 if __name__ == '__main__':
