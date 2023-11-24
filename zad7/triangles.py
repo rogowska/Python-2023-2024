@@ -70,7 +70,6 @@ class Triangle:
 def make4TestMethod(myTriangle, triangleTuple):
     for triangle in myTriangle.make4():
         if triangle not in triangleTuple:
-            print(triangle)
             assert False
 
 
