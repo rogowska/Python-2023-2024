@@ -35,12 +35,6 @@ class Triangle:
     def __ne__(self, other):
         return not self == other
 
-    def center(self):
-        sum_point = self.pt1 + self.pt2 + self.pt3
-        sum_point.x = sum_point.x / 3
-        sum_point.y = sum_point.y / 3
-        return sum_point
-
     def area(self):
         return 1 / 2 * abs(self.pt1.x * (self.pt2.y - self.pt3.y) + self.pt2.x * (self.pt3.y - self.pt1.y)
                            + self.pt3.x * (self.pt1.y - self.pt2.y))
@@ -69,3 +63,49 @@ class Triangle:
         return Triangle(list_of_points[0].x, list_of_points[0].y, list_of_points[1].x, list_of_points[1].y,
                         list_of_points[2].x, list_of_points[2].y)
 
+    @property
+    def center(self):
+        sum_point = self.pt1 + self.pt2 + self.pt3
+        sum_point.x = sum_point.x / 3
+        sum_point.y = sum_point.y / 3
+        return sum_point
+
+    @property
+    def top(self):
+        return max(self.pt1.y, self.pt2.y, self.pt3.y)
+
+    @property
+    def left(self):
+        return min(self.pt1.x, self.pt2.x, self.pt3.x)
+
+    @property
+    def bottom(self):
+        return min(self.pt1.y, self.pt2.y, self.pt3.y)
+
+    @property
+    def right(self):
+        return max(self.pt1.x, self.pt2.x, self.pt3.x)
+
+    @property
+    def width(self):
+        return self.right - self.left
+
+    @property
+    def height(self):
+        return self.top - self.bottom
+
+    @property
+    def topleft(self):
+        return Point(self.left, self.top)
+
+    @property
+    def bottomleft(self):
+        return Point(self.left, self.bottom)
+
+    @property
+    def topright(self):
+        return Point(self.right, self.top)
+
+    @property
+    def bottomright(self):
+        return Point(self.right, self.bottom)
