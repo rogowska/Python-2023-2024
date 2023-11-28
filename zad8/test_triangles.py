@@ -9,24 +9,32 @@ def make4TestMethod(myTriangle, triangleTuple):
             assert False
 
 
-@pytest.fixture
+@pytest.fixture(scope="function")
 def myTriangle():
-    return Triangle(1, 3, 4, 5, -5, 1)
+    mytri = Triangle(1, 3, 4, 5, -5, 1)
+    yield mytri
+    del mytri
 
 
-@pytest.fixture
+@pytest.fixture(scope="function")
 def myTriangle2():
-    return Triangle(0, 0, -6, 9, -5, 8)
+    mytri = Triangle(0, 0, -6, 9, -5, 8)
+    yield mytri
+    del mytri
 
 
-@pytest.fixture
+@pytest.fixture(scope="function")
 def myTriangle3():
-    return Triangle(2, 0, 4, 9, -8, -1)
+    mytri = Triangle(2, 0, 4, 9, -8, -1)
+    yield mytri
+    del mytri
 
 
-@pytest.fixture
+@pytest.fixture(scope="function")
 def myTriangle4():
-    return Triangle(1, 3, 4, 5, -5, 1)
+    mytri = Triangle(1, 3, 4, 5, -5, 1)
+    yield mytri
+    del mytri
 
 
 def test__str__(myTriangle, myTriangle2, myTriangle3):
@@ -127,27 +135,45 @@ def test_left(myTriangle, myTriangle2, myTriangle3):
 
 
 def test_right(myTriangle, myTriangle2, myTriangle3):
-    assert myTriangle.right == -5
-    assert myTriangle2.right == -6
-    assert myTriangle3.right == -8
+    assert myTriangle.right == 4
+    assert myTriangle2.right == 0
+    assert myTriangle3.right == 4
 
 
-def test_width(myTriangle, myTriangle2, myTriangle3): pass
+def test_width(myTriangle, myTriangle2, myTriangle3):
+    assert myTriangle.width == 9
+    assert myTriangle2.width == 6
+    assert myTriangle3.width == 12
 
 
-def test_height(myTriangle, myTriangle2, myTriangle3): pass
+def test_height(myTriangle, myTriangle2, myTriangle3):
+    assert myTriangle.height == 4
+    assert myTriangle2.height == 9
+    assert myTriangle3.height == 10
 
 
-def test_topleft(): pass
+def test_topleft(myTriangle, myTriangle2, myTriangle3):
+    assert myTriangle.topleft == Point(-5, 5)
+    assert myTriangle2.topleft == Point(-6, 9)
+    assert myTriangle3.topleft == Point(-8, 9)
 
 
-def test_topright(): pass
+def test_topright(myTriangle, myTriangle2, myTriangle3):
+    assert myTriangle.topright == Point(4, 5)
+    assert myTriangle2.topright == Point(0, 9)
+    assert myTriangle3.topright == Point(4, 9)
 
 
-def test_bottomleft(): pass
+def test_bottomleft(myTriangle, myTriangle2, myTriangle3):
+    assert myTriangle.bottomleft == Point(-5, 1)
+    assert myTriangle2.bottomleft == Point(-6, 0)
+    assert myTriangle3.bottomleft == Point(-8, -1)
 
 
-def test_bottomright(): pass
+def test_bottomright(myTriangle, myTriangle2, myTriangle3):
+    assert myTriangle.bottomright == Point(4, 1)
+    assert myTriangle2.bottomright == Point(0, 0)
+    assert myTriangle3.bottomright == Point(4, -1)
 
 
 if __name__ == '__main__':
