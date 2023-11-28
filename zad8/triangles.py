@@ -60,8 +60,20 @@ class Triangle:
 
     @staticmethod
     def from_points(list_of_points):
+        Triangle.validation_of_points(list_of_points)
         return Triangle(list_of_points[0].x, list_of_points[0].y, list_of_points[1].x, list_of_points[1].y,
                         list_of_points[2].x, list_of_points[2].y)
+
+    @staticmethod
+    def validation_of_points(list_of_points):
+        if len(list_of_points) != 3:
+            raise ValueError("List should contain 3 points")
+        for point in list_of_points:
+            if not isinstance(point, Point):
+                raise ValueError("All elements should be Point type")
+        if ((list_of_points[2].y - list_of_points[1].y) * (list_of_points[1].x - list_of_points[0].x) ==
+                (list_of_points[1].y - list_of_points[0].y) * (list_of_points[2].x - list_of_points[1].x)):
+            raise ValueError("Points are collinear")
 
     @property
     def center(self):

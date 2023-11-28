@@ -1,5 +1,6 @@
 import pytest
 from triangles import Triangle
+from points import Point
 
 
 def make4TestMethod(myTriangle, triangleTuple):
@@ -88,25 +89,53 @@ def test_make4(myTriangle, myTriangle2, myTriangle3):
                                   Triangle(4, 9, -2, 4, 3, 4.5)))
 
 
-def test_from_points(): pass
+def test_from_points():
+    assert Triangle.from_points([Point(1, 3), Point(-5, 0), Point(34.2, 5)]) == Triangle(1, 3, -5, 0, 34.2, 5)
+    assert Triangle.from_points((Point(9, -3), Point(2, 5), Point(8, 2))) == Triangle(9, -3, 2, 5, 8, 2)
 
 
-def test_top(): pass
+def test_validation_of_points_for_from_points():
+    with pytest.raises(ValueError) as excinfo:
+        Triangle.from_points((Point(9, -3), Point(2, 5)))
+    assert "List should contain 3 points" in str(excinfo.value)
+
+    with pytest.raises(ValueError) as excinfo:
+        Triangle.from_points((Point(2, 3), "Bella", 1))
+    assert "All elements should be Point type" in str(excinfo.value)
+
+    with pytest.raises(ValueError) as excinfo:
+        Triangle.from_points((Point(0, 0), Point(-2, 0), Point(-6, 0)))
+    assert "Points are collinear" in str(excinfo.value)
 
 
-def test_bottom(): pass
+def test_top(myTriangle, myTriangle2, myTriangle3):
+    assert myTriangle.top == 5
+    assert myTriangle2.top == 9
+    assert myTriangle3.top == 9
 
 
-def test_left(): pass
+def test_bottom(myTriangle, myTriangle2, myTriangle3):
+    assert myTriangle.bottom == 1
+    assert myTriangle2.bottom == 0
+    assert myTriangle3.bottom == -1
 
 
-def test_right(): pass
+def test_left(myTriangle, myTriangle2, myTriangle3):
+    assert myTriangle.left == -5
+    assert myTriangle2.left == -6
+    assert myTriangle3.left == -8
 
 
-def test_width(): pass
+def test_right(myTriangle, myTriangle2, myTriangle3):
+    assert myTriangle.right == -5
+    assert myTriangle2.right == -6
+    assert myTriangle3.right == -8
 
 
-def test_height(): pass
+def test_width(myTriangle, myTriangle2, myTriangle3): pass
+
+
+def test_height(myTriangle, myTriangle2, myTriangle3): pass
 
 
 def test_topleft(): pass
