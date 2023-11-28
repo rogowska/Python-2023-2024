@@ -1,3 +1,9 @@
+# Oliwia Rogowska #
+#    Zadanie 8    #
+#     Python      #
+#   28.11.2023    #
+###################
+
 import pytest
 from triangles import Triangle
 from points import Point
