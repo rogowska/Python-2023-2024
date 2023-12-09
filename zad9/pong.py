@@ -55,7 +55,6 @@ sprite_right_palette = Block(20, 100)
 sprite_right_palette.rect.topleft = (WIDTH - 60, HEIGHT / 2)
 sprite_right_palette.add(sprite_group_palettes)
 
-
 # MAKE SHAPES
 # ball
 ball_pos = [WIDTH / 2, HEIGHT / 2 - 10]
@@ -73,7 +72,6 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit(0)
-
 
     # INPUT
     keys = pygame.key.get_pressed()
@@ -93,10 +91,12 @@ while True:
         ball_pos_vector.x = ball_pos_vector.x + ball_velocity.x
         ball_pos_vector.y = 10
         ball_velocity.y = -ball_velocity.y
-    ball_pos_vector = ball_pos_vector + ball_velocity
 
+    # checking for collisions
     if pygame.sprite.spritecollideany(sprite_ball, sprite_group_palettes) is not None:
         ball_velocity.x = -ball_velocity.x
+
+    ball_pos_vector = ball_pos_vector + ball_velocity
 
     # UPDATING
     sprite_group_ball.update(ball_pos_vector.x, ball_pos_vector.y)
