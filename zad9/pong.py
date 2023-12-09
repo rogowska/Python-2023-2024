@@ -79,7 +79,7 @@ while True:
     if keys[pygame.K_UP] and player_palette_pos_y > 0:
         left_palette = left_palette.move(0, -4)
         player_palette_pos_y -= 4
-    if keys[pygame.K_DOWN] and player_palette_pos_y < 620:
+    if keys[pygame.K_DOWN] and player_palette_pos_y < HEIGHT - 100:
         left_palette = left_palette.move(0, 4)
         player_palette_pos_y += 4
     # ball movement
