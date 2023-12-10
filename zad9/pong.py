@@ -38,6 +38,10 @@ class Block(pygame.sprite.Sprite):
         self.rect.update(new_x, new_y, self.rect.width, self.rect.height)
 
 
+# LOAD IMAGES
+font = pygame.font.Font(None, 50)
+goodorbad = ""
+
 # SPRITE GROUPS
 sprite_group_paddles = pygame.sprite.Group()
 sprite_group_ball = pygame.sprite.Group()
@@ -50,28 +54,37 @@ sprite_ball = Block(7, 7)
 sprite_ball.rect.center = (WIDTH / 2, HEIGHT / 2)
 sprite_ball.add(sprite_group_ball)
 
-sprite_left_paddle = Block(paddle_width, paddle_length)
-sprite_left_paddle.rect.topleft = (40, HEIGHT / 2)
-sprite_left_paddle.add(sprite_group_paddles)
+sprite_player_paddle = Block(paddle_width, paddle_length)
+sprite_player_paddle.rect.topleft = (40, HEIGHT / 2)
+sprite_player_paddle.add(sprite_group_paddles)
 
-sprite_right_paddle = Block(paddle_width, paddle_length)
-sprite_right_paddle.rect.topleft = (WIDTH - 60, HEIGHT / 2)
-sprite_right_paddle.add(sprite_group_paddles)
+sprite_enemy_paddle = Block(paddle_width, paddle_length)
+sprite_enemy_paddle.rect.topleft = (WIDTH - 60, HEIGHT / 2)
+sprite_enemy_paddle.add(sprite_group_paddles)
 
 # MAKE SHAPES
 # ball
 ball_speed = 5
-ball_pos = [WIDTH / 2, HEIGHT / 2 - 10]
-ball_velocity = pygame.math.Vector2(ball_speed, 0).rotate(random.randrange(360))
+ball_radius = 10
+ball_pos = [WIDTH / 2, HEIGHT / 2 - ball_radius]
+angle = random.choice([random.randrange(0, 60), random.randrange(120, 240), random.randrange(300, 360)])
+ball_velocity = pygame.math.Vector2(ball_speed, 0).rotate(angle)
 ball_pos_vector = pygame.math.Vector2(ball_pos)
 ball_future_vector = ball_pos_vector + ball_velocity
+
 # paddles
+wrong_steps_left = 0
 paddle_speed = ball_speed + 2
 player_paddle_pos_y = HEIGHT / 2
 enemy_paddle_pos_y = HEIGHT / 2
-enemy_paddle_pos_centre_y = enemy_paddle_pos_y + paddle_length/2
-left_paddle = pygame.Rect(40, HEIGHT / 2, paddle_width, paddle_length)
-right_paddle = pygame.Rect(WIDTH - 60, HEIGHT / 2, paddle_width, paddle_length)
+enemy_paddle_pos_centre_y = enemy_paddle_pos_y + paddle_length / 2
+enemy_paddle_direction = 1
+player_paddle = pygame.Rect(40, HEIGHT / 2, paddle_width, paddle_length)
+enemy_paddle = pygame.Rect(WIDTH - 60, HEIGHT / 2, paddle_width, paddle_length)
+
+# line
+line_width = 2
+line = pygame.Rect(WIDTH / 2, 0, line_width, HEIGHT)
 
 # MAIN GAME LOOP
 while True:
@@ -86,38 +99,52 @@ while True:
 
     # player paddle
     if keys[pygame.K_UP] and player_paddle_pos_y > 0:
-        left_paddle = left_paddle.move(0, -paddle_speed)
+        player_paddle = player_paddle.move(0, -paddle_speed)
         player_paddle_pos_y -= paddle_speed
     if keys[pygame.K_DOWN] and player_paddle_pos_y < HEIGHT - 100:
-        left_paddle = left_paddle.move(0, paddle_speed)
+        player_paddle = player_paddle.move(0, paddle_speed)
         player_paddle_pos_y += paddle_speed
 
     # ball movement
-    if ball_pos_vector.y + ball_velocity.y > HEIGHT - 10:
+    if ball_pos_vector.y + ball_velocity.y > HEIGHT - ball_radius:
         ball_pos_vector.x = ball_pos_vector.x + ball_velocity.x
-        ball_pos_vector.y = HEIGHT - 10
+        ball_pos_vector.y = HEIGHT - ball_radius
         ball_velocity.y = -ball_velocity.y
-    if ball_pos_vector.y + ball_velocity.y < 10:
+    if ball_pos_vector.y + ball_velocity.y < ball_radius:
         ball_pos_vector.x = ball_pos_vector.x + ball_velocity.x
-        ball_pos_vector.y = 10
+        ball_pos_vector.y = ball_radius
         ball_velocity.y = -ball_velocity.y
 
     # enemy paddle
 
     if ball_velocity.x > 0:
-        if ball_pos_vector.y < enemy_paddle_pos_centre_y and ball_future_vector.y < enemy_paddle_pos_centre_y - paddle_speed and enemy_paddle_pos_y > 0:
-            right_paddle = right_paddle.move(0, -paddle_speed)
-            enemy_paddle_pos_y -= paddle_speed
-            print("Ball above", ball_pos_vector.y, enemy_paddle_pos_centre_y)
-        elif ball_pos_vector.y > enemy_paddle_pos_centre_y and ball_future_vector.y > enemy_paddle_pos_centre_y + paddle_speed and enemy_paddle_pos_y < HEIGHT - paddle_length:
-            right_paddle = right_paddle.move(0, paddle_speed)
-            enemy_paddle_pos_y += paddle_speed
-            print("Ball below", ball_pos_vector.y, enemy_paddle_pos_centre_y)
+        if (wrong_steps_left == 0 and random.randint(0, 250) > 2) or ball_pos_vector.x < WIDTH * 0.85:
+            if ball_pos_vector.y < enemy_paddle_pos_centre_y and ball_future_vector.y < enemy_paddle_pos_centre_y - paddle_speed and enemy_paddle_pos_y > 0:
+                enemy_paddle = enemy_paddle.move(0, -paddle_speed)
+                enemy_paddle_pos_y -= paddle_speed
+                enemy_paddle_direction = -1
+            elif ball_pos_vector.y > enemy_paddle_pos_centre_y and ball_future_vector.y > enemy_paddle_pos_centre_y + paddle_speed and enemy_paddle_pos_y < HEIGHT - paddle_length:
+                enemy_paddle = enemy_paddle.move(0, paddle_speed)
+                enemy_paddle_pos_y += paddle_speed
+                enemy_paddle_direction = 1
+            goodorbad = "GOOD"
+        else:
+            if wrong_steps_left == 0:
+                wrong_steps_left = random.randint(20, 30)
+            if (enemy_paddle_direction == 1 and enemy_paddle_pos_y < HEIGHT - paddle_length) or (
+                    enemy_paddle_direction == -1 and enemy_paddle_pos_y > 0):
+                enemy_paddle = enemy_paddle.move(0, paddle_speed * enemy_paddle_direction)
+                enemy_paddle_pos_y += paddle_speed * enemy_paddle_direction
+            wrong_steps_left -= 1
+            goodorbad = "BAD"
 
     # checking for collisions
-    if pygame.sprite.spritecollideany(sprite_ball, sprite_group_paddles) is not None:
+    if pygame.sprite.collide_rect(sprite_ball, sprite_player_paddle):
+        ball_pos_vector.x = player_paddle.x + paddle_width + ball_radius
         ball_velocity.x = -ball_velocity.x
-
+    elif pygame.sprite.collide_rect(sprite_ball, sprite_enemy_paddle):
+        ball_pos_vector.x = enemy_paddle.x - ball_radius
+        ball_velocity.x = -ball_velocity.x
 
     # UPDATING
     ball_pos_vector = ball_pos_vector + ball_velocity
@@ -125,16 +152,20 @@ while True:
     enemy_paddle_pos_centre_y = enemy_paddle_pos_y + paddle_length / 2
 
     sprite_group_ball.update(ball_pos_vector.x, ball_pos_vector.y)
-    sprite_left_paddle.update(40, player_paddle_pos_y)
-    sprite_right_paddle.update(WIDTH - 60, enemy_paddle_pos_y)
+    sprite_player_paddle.update(40, player_paddle_pos_y)
+    sprite_enemy_paddle.update(WIDTH - 60, enemy_paddle_pos_y)
 
     # DRAWING
     screen.fill(black)
-    pygame.draw.rect(screen, white, left_paddle)
-    pygame.draw.rect(screen, white, right_paddle)
-    pygame.draw.circle(screen, white, ball_pos_vector, 10)
+    pygame.draw.rect(screen, white, player_paddle)
+    pygame.draw.rect(screen, white, enemy_paddle)
+    pygame.draw.circle(screen, white, ball_pos_vector, ball_radius)
+    pygame.draw.rect(screen, white, line)
     sprite_group_ball.draw(screen)
     sprite_group_paddles.draw(screen)
+    text_surf = font.render(goodorbad, True, white)
+    text_rect = text_surf.get_rect(center=(WIDTH / 2, HEIGHT / 2))
+    screen.blit(text_surf, text_rect)
 
     pygame.display.flip()
     clock.tick(FPS)
