@@ -135,7 +135,7 @@ while True:
     # ENEMY PADDLE MOVEMENT
     # moving when ball moves towards paddle
     if ball_velocity.x > 0:
-        # moving accordingly to balls position if:
+        # moving accordingly to ball position if:
         # 1) there is no wrong movement frames left
         # 2) ball is far enough
         # 3) and random chance for wrong movement occurrence did not happen
@@ -161,7 +161,7 @@ while True:
                 enemy_paddle_pos_y += paddle_speed * enemy_paddle_direction
             wrong_steps_left -= 1
 
-    # checking for collisions
+    # CHECKING FOR COLLISIONS
     if pygame.sprite.collide_rect(sprite_ball, sprite_player_paddle):
         ball_pos_vector.x = player_paddle.x + paddle_width + ball_radius
         ball_velocity.x = -ball_velocity.x
@@ -169,7 +169,7 @@ while True:
         ball_pos_vector.x = enemy_paddle.x - ball_radius
         ball_velocity.x = -ball_velocity.x
 
-    # resetting board
+    # RESETTING BOARD
     if scored:
         if enemy_score_counter == 11 or player_score_counter == 11:
             pygame.quit()
