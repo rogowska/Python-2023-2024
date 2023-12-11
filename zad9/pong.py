@@ -40,7 +40,6 @@ class Block(pygame.sprite.Sprite):
 
 # LOAD IMAGES
 font = pygame.font.Font(None, 50)
-goodorbad = ""
 
 # SPRITE GROUPS
 sprite_group_paddles = pygame.sprite.Group()
@@ -86,6 +85,11 @@ enemy_paddle = pygame.Rect(WIDTH - 60, HEIGHT / 2, paddle_width, paddle_length)
 line_width = 2
 line = pygame.Rect(WIDTH / 2, 0, line_width, HEIGHT)
 
+# scores
+player_score_counter = 0
+enemy_score_counter = 0
+scored = False
+
 # MAIN GAME LOOP
 while True:
     # HANDLE EVENTS
@@ -115,10 +119,20 @@ while True:
         ball_pos_vector.y = ball_radius
         ball_velocity.y = -ball_velocity.y
 
+    # score counting
+    if ball_pos_vector.x <= 0:
+        scored = True
+        enemy_score_counter += 1
+        print(enemy_score_counter)
+    if ball_pos_vector.x >= WIDTH:
+        scored = True
+        player_score_counter += 1
+        print(player_score_counter)
+
     # enemy paddle
 
     if ball_velocity.x > 0:
-        if (wrong_steps_left == 0 and random.randint(0, 250) > 2) or ball_pos_vector.x < WIDTH * 0.85:
+        if (wrong_steps_left == 0 and random.randint(0, 220) > 2) or ball_pos_vector.x < WIDTH * 0.85:
             if ball_pos_vector.y < enemy_paddle_pos_centre_y and ball_future_vector.y < enemy_paddle_pos_centre_y - paddle_speed and enemy_paddle_pos_y > 0:
                 enemy_paddle = enemy_paddle.move(0, -paddle_speed)
                 enemy_paddle_pos_y -= paddle_speed
@@ -127,7 +141,7 @@ while True:
                 enemy_paddle = enemy_paddle.move(0, paddle_speed)
                 enemy_paddle_pos_y += paddle_speed
                 enemy_paddle_direction = 1
-            goodorbad = "GOOD"
+
         else:
             if wrong_steps_left == 0:
                 wrong_steps_left = random.randint(20, 30)
@@ -136,7 +150,6 @@ while True:
                 enemy_paddle = enemy_paddle.move(0, paddle_speed * enemy_paddle_direction)
                 enemy_paddle_pos_y += paddle_speed * enemy_paddle_direction
             wrong_steps_left -= 1
-            goodorbad = "BAD"
 
     # checking for collisions
     if pygame.sprite.collide_rect(sprite_ball, sprite_player_paddle):
@@ -145,6 +158,21 @@ while True:
     elif pygame.sprite.collide_rect(sprite_ball, sprite_enemy_paddle):
         ball_pos_vector.x = enemy_paddle.x - ball_radius
         ball_velocity.x = -ball_velocity.x
+
+    # resetting board
+    if scored:
+        if enemy_score_counter == 11 or player_score_counter == 11:
+            pygame.quit()
+            sys.exit(0)
+        scored = False
+        player_paddle_pos_y = HEIGHT / 2
+        enemy_paddle_pos_y = HEIGHT / 2
+        ball_pos = [WIDTH / 2, HEIGHT / 2 - ball_radius]
+        ball_pos_vector = pygame.math.Vector2(ball_pos)
+        angle = random.choice([random.randrange(0, 60), random.randrange(120, 240), random.randrange(300, 360)])
+        ball_velocity = pygame.math.Vector2(ball_speed, 0).rotate(angle)
+        player_paddle.update(40, HEIGHT / 2, paddle_width, paddle_length)
+        enemy_paddle.update(WIDTH - 60, HEIGHT / 2, paddle_width, paddle_length)
 
     # UPDATING
     ball_pos_vector = ball_pos_vector + ball_velocity
@@ -163,8 +191,9 @@ while True:
     pygame.draw.rect(screen, white, line)
     sprite_group_ball.draw(screen)
     sprite_group_paddles.draw(screen)
-    text_surf = font.render(goodorbad, True, white)
-    text_rect = text_surf.get_rect(center=(WIDTH / 2, HEIGHT / 2))
+
+    text_surf = font.render(str(player_score_counter) + "          " + str(enemy_score_counter), True, white)
+    text_rect = text_surf.get_rect(center=(WIDTH / 2, HEIGHT / 4))
     screen.blit(text_surf, text_rect)
 
     pygame.display.flip()
