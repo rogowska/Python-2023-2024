@@ -126,11 +126,9 @@ while True:
     if ball_pos_vector.x <= 0:
         scored = True
         enemy_score_counter += 1
-        print(enemy_score_counter)
     if ball_pos_vector.x >= WIDTH:
         scored = True
         player_score_counter += 1
-        print(player_score_counter)
 
     # ENEMY PADDLE MOVEMENT
     # moving when ball moves towards paddle
