@@ -24,6 +24,43 @@ pygame.display.set_caption('Atari Pong')
 FPS = 60
 clock = pygame.time.Clock()
 
+# SCORING
+font = pygame.font.Font(None, 50)
+player_score_counter = 0
+enemy_score_counter = 0
+scored = False
+
+# BALL
+ball_speed = 7
+ball_radius = 10
+ball_pos = [WIDTH / 2, HEIGHT / 2 - ball_radius]
+angle = random.choice([random.randrange(0, 60), random.randrange(120, 240), random.randrange(300, 360)])
+ball_velocity = pygame.math.Vector2(ball_speed, 0).rotate(angle)
+ball_pos_vector = pygame.math.Vector2(ball_pos)
+ball_future_vector = ball_pos_vector + ball_velocity
+
+# PADDLES
+paddle_width = 20
+paddle_length = 100
+paddle_speed = ball_speed + 2
+
+# enemy paddle
+enemy_paddle_pos_y = HEIGHT / 2
+enemy_paddle_pos_centre_y = enemy_paddle_pos_y + paddle_length / 2
+enemy_paddle_direction = 1
+enemy_paddle = pygame.Rect(WIDTH - 60, HEIGHT / 2, paddle_width, paddle_length)
+
+# player paddle
+player_paddle_pos_y = HEIGHT / 2
+player_paddle = pygame.Rect(40, HEIGHT / 2, paddle_width, paddle_length)
+
+# LINE
+line_width = 2
+line = pygame.Rect(WIDTH / 2, 0, line_width, HEIGHT)
+
+# other
+wrong_steps_left = 0
+
 
 # SPRITE BLOCK
 class Block(pygame.sprite.Sprite):
@@ -38,18 +75,12 @@ class Block(pygame.sprite.Sprite):
         self.rect.update(new_x, new_y, self.rect.width, self.rect.height)
 
 
-# LOAD IMAGES
-font = pygame.font.Font(None, 50)
-
 # SPRITE GROUPS
 sprite_group_paddles = pygame.sprite.Group()
 sprite_group_ball = pygame.sprite.Group()
 
 # SPRITES AND ADDING TO GROUPS
-paddle_width = 20
-paddle_length = 100
-
-sprite_ball = Block(7, 7)
+sprite_ball = Block(ball_radius - 3, ball_radius - 3)
 sprite_ball.rect.center = (WIDTH / 2, HEIGHT / 2)
 sprite_ball.add(sprite_group_ball)
 
@@ -60,35 +91,6 @@ sprite_player_paddle.add(sprite_group_paddles)
 sprite_enemy_paddle = Block(paddle_width, paddle_length)
 sprite_enemy_paddle.rect.topleft = (WIDTH - 60, HEIGHT / 2)
 sprite_enemy_paddle.add(sprite_group_paddles)
-
-# MAKE SHAPES
-# ball
-ball_speed = 5
-ball_radius = 10
-ball_pos = [WIDTH / 2, HEIGHT / 2 - ball_radius]
-angle = random.choice([random.randrange(0, 60), random.randrange(120, 240), random.randrange(300, 360)])
-ball_velocity = pygame.math.Vector2(ball_speed, 0).rotate(angle)
-ball_pos_vector = pygame.math.Vector2(ball_pos)
-ball_future_vector = ball_pos_vector + ball_velocity
-
-# paddles
-wrong_steps_left = 0
-paddle_speed = ball_speed + 2
-player_paddle_pos_y = HEIGHT / 2
-enemy_paddle_pos_y = HEIGHT / 2
-enemy_paddle_pos_centre_y = enemy_paddle_pos_y + paddle_length / 2
-enemy_paddle_direction = 1
-player_paddle = pygame.Rect(40, HEIGHT / 2, paddle_width, paddle_length)
-enemy_paddle = pygame.Rect(WIDTH - 60, HEIGHT / 2, paddle_width, paddle_length)
-
-# line
-line_width = 2
-line = pygame.Rect(WIDTH / 2, 0, line_width, HEIGHT)
-
-# scores
-player_score_counter = 0
-enemy_score_counter = 0
-scored = False
 
 # MAIN GAME LOOP
 while True:
@@ -101,7 +103,7 @@ while True:
     # INPUT
     keys = pygame.key.get_pressed()
 
-    # player paddle
+    # PLAYER PADDLE MOVEMENT
     if keys[pygame.K_UP] and player_paddle_pos_y > 0:
         player_paddle = player_paddle.move(0, -paddle_speed)
         player_paddle_pos_y -= paddle_speed
@@ -109,7 +111,8 @@ while True:
         player_paddle = player_paddle.move(0, paddle_speed)
         player_paddle_pos_y += paddle_speed
 
-    # ball movement
+    # BALL MOVEMENT
+    # wall bouncing
     if ball_pos_vector.y + ball_velocity.y > HEIGHT - ball_radius:
         ball_pos_vector.x = ball_pos_vector.x + ball_velocity.x
         ball_pos_vector.y = HEIGHT - ball_radius
@@ -129,22 +132,29 @@ while True:
         player_score_counter += 1
         print(player_score_counter)
 
-    # enemy paddle
-
+    # ENEMY PADDLE MOVEMENT
+    # moving when ball moves towards paddle
     if ball_velocity.x > 0:
+        # moving accordingly to balls position if:
+        # 1) there is no wrong movement frames left
+        # 2) ball is far enough
+        # 3) and random chance for wrong movement occurrence did not happen
         if (wrong_steps_left == 0 and random.randint(0, 220) > 2) or ball_pos_vector.x < WIDTH * 0.85:
-            if ball_pos_vector.y < enemy_paddle_pos_centre_y and ball_future_vector.y < enemy_paddle_pos_centre_y - paddle_speed and enemy_paddle_pos_y > 0:
+            if (ball_pos_vector.y < enemy_paddle_pos_centre_y and ball_future_vector.y < enemy_paddle_pos_centre_y -
+                    paddle_speed and enemy_paddle_pos_y > 0):
                 enemy_paddle = enemy_paddle.move(0, -paddle_speed)
                 enemy_paddle_pos_y -= paddle_speed
                 enemy_paddle_direction = -1
-            elif ball_pos_vector.y > enemy_paddle_pos_centre_y and ball_future_vector.y > enemy_paddle_pos_centre_y + paddle_speed and enemy_paddle_pos_y < HEIGHT - paddle_length:
+            elif (ball_pos_vector.y > enemy_paddle_pos_centre_y and ball_future_vector.y > enemy_paddle_pos_centre_y +
+                  paddle_speed and enemy_paddle_pos_y < HEIGHT - paddle_length):
                 enemy_paddle = enemy_paddle.move(0, paddle_speed)
                 enemy_paddle_pos_y += paddle_speed
                 enemy_paddle_direction = 1
-
+        # if conditions for good movement were not met, paddle moves into one direction for the randomised
+        # number of frames
         else:
             if wrong_steps_left == 0:
-                wrong_steps_left = random.randint(20, 30)
+                wrong_steps_left = random.randint(25, 35)
             if (enemy_paddle_direction == 1 and enemy_paddle_pos_y < HEIGHT - paddle_length) or (
                     enemy_paddle_direction == -1 and enemy_paddle_pos_y > 0):
                 enemy_paddle = enemy_paddle.move(0, paddle_speed * enemy_paddle_direction)
@@ -174,7 +184,7 @@ while True:
         player_paddle.update(40, HEIGHT / 2, paddle_width, paddle_length)
         enemy_paddle.update(WIDTH - 60, HEIGHT / 2, paddle_width, paddle_length)
 
-    # UPDATING
+    # UPDATING POSITIONS AND SPRITES
     ball_pos_vector = ball_pos_vector + ball_velocity
     ball_future_vector = ball_pos_vector + ball_velocity
     enemy_paddle_pos_centre_y = enemy_paddle_pos_y + paddle_length / 2
@@ -192,6 +202,7 @@ while True:
     sprite_group_ball.draw(screen)
     sprite_group_paddles.draw(screen)
 
+    # SCORING DISPLAY
     text_surf = font.render(str(player_score_counter) + "          " + str(enemy_score_counter), True, white)
     text_rect = text_surf.get_rect(center=(WIDTH / 2, HEIGHT / 4))
     screen.blit(text_surf, text_rect)
