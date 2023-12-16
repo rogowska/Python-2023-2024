@@ -1,6 +1,4 @@
-## Zadania z kursu Python na które uczęszczałam w roku akademickim 2023-2024 
-
-## Lista programów
+## Lista programów kursu Python na które uczęszczałam w roku akademickim 2023-2024 
 
 ### 1. -brak-
 ### 2. Typy i operacje
