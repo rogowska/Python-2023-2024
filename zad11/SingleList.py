@@ -12,6 +12,12 @@ class SingleList:
         self.head = None
         self.tail = None
 
+    def __iter__(self):
+        node = self.head
+        while node:
+            yield node.data
+            node = node.next
+
     def is_empty(self):
         return self.head is None
 
@@ -66,7 +72,7 @@ class SingleList:
             while next_node is not None:
                 if next_node.data < min_node.data:
                     min_node = next_node
-                    next_node = next_node.next
+                next_node = next_node.next
             return min_node
 
     def find_max(self):
@@ -78,17 +84,19 @@ class SingleList:
             while next_node is not None:
                 if next_node.data > max_node.data:
                     max_node = next_node
-                    next_node = next_node.next
+                next_node = next_node.next
             return max_node
 
     def reverse(self):
-        anode = self.head
-        while anode.next is not self.tail:
-            temp = anode.next.next
-            anode.next.next = anode
-            anode = anode.next
-            anode.next = temp
-        temp = self.head
-        self.head = self.tail
-        self.tail = temp
+        if self.is_empty() or self.head == self.tail:
+            return
+        self.tail = self.head
+        previous = None
+        while self.head is not None:
+            next_node = self.head.next
+            self.head.next = previous
+            previous = self.head
+            self.head = next_node
+        self.head = previous
+
 
