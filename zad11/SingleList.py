@@ -47,20 +47,48 @@ class SingleList:
         return node
 
     def search(self, data):
-        pass  # klasy O(n)
-
-    # Zwraca łącze do węzła o podanym kluczu lub None.
+        if self.is_empty():
+            return None
+        else:
+            next_node = self.head
+            while next_node is not None:
+                if next_node.data == data:
+                    return next_node
+                else:
+                    next_node = next_node.next
 
     def find_min(self):
-        pass  # klasy O(n)
-
-    # Zwraca łącze do węzła z najmniejszym kluczem lub None dla pustej listy.
+        if self.is_empty():
+            return None
+        else:
+            min_node = self.head
+            next_node = self.head.next
+            while next_node is not None:
+                if next_node.data < min_node.data:
+                    min_node = next_node
+                    next_node = next_node.next
+            return min_node
 
     def find_max(self):
-        pass  # klasy O(n)
-
-    # Zwraca łącze do węzła z największym kluczem lub None dla pustej listy.
+        if self.is_empty():
+            return None
+        else:
+            max_node = self.head
+            next_node = self.head.next
+            while next_node is not None:
+                if next_node.data > max_node.data:
+                    max_node = next_node
+                    next_node = next_node.next
+            return max_node
 
     def reverse(self):
-        pass  # klasy O(n)
-    # Odwracanie kolejności węzłów na liście.
+        anode = self.head
+        while anode.next is not self.tail:
+            temp = anode.next.next
+            anode.next.next = anode
+            anode = anode.next
+            anode.next = temp
+        temp = self.head
+        self.head = self.tail
+        self.tail = temp
+
