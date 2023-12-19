@@ -10,6 +10,7 @@
 ### 8. Dodanie dekoratorów i metod statycznych do klasy "Triangle" + testy (pytest)
 ### 9. Implementacja gry "Atari Pong" (pygame)
 ### 10. Program symulujący rzut kostką sześcienną (tkinter)
+### 11. Poszerzenie danej klasy "SingleList" o dodatkowe metody + testy (pytest)
 
 ## Wymagania
 
