@@ -217,7 +217,7 @@ class RBTree:
                 x = self.root
 
     def delete(self, data):
-        """Funkcja pozwalająca wstawić węzeł o danej wartości do drzewa"""
+        """Funkcja pozwalająca usunąć węzeł o danej wartości z drzewa"""
         # znalezienie węzła w drzewie o podanej wartości
         y = self.search(data)
         z = y
