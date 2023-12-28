@@ -17,6 +17,7 @@ class RBTree:
             print(root.data)
             self.inorder_display(root.right)
 
+    # przepisać żeby zwracał string /?/
     def display(self):
         """Funkcja wyświetlająca wartości węzłów w drzewie w kolejności inorder"""
         self.inorder_display(self.root)
