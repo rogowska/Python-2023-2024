@@ -54,7 +54,7 @@ class RBTree:
         return maximum
 
     def successor(self, node):
-        """Funkcja zwracająca następnik węzła pzy przeglądaniu węzła w kolejności inorder"""
+        """Funkcja zwracająca następnik węzła przy przeglądaniu węzła w kolejności inorder"""
         if node.right is not None:
             return self.minimum(node.right)
         parent = node.parent
@@ -67,7 +67,7 @@ class RBTree:
 
     # prawdopodobnie do poprawy
     def predecessor(self, node):
-        """Funkcja zwracająca poprzednik węzła pzy przeglądaniu węzła w kolejności inorder"""
+        """Funkcja zwracająca poprzednik węzła przy przeglądaniu węzła w kolejności inorder"""
         if node.left is not None:
             return self.maximum(node.left)
         parent = node.parent
