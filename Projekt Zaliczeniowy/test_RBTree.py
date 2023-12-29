@@ -41,9 +41,9 @@ def Tree2():
 
 
 def test_display(TreeWithRootOnly, Tree1, Tree2):
-    assert TreeWithRootOnly.display() == "5 "
-    assert str(Tree1.display()) == "3 5 10 11 14 15 16 21 54 "
-    assert Tree2.display() == "1 2 3 7 14 32 40 59 80 "
+    assert str(TreeWithRootOnly) == "5"
+    assert str(Tree1) == "3 5 10 11 14 15 16 21 54"
+    assert str(Tree2) == "1 2 3 7 14 32 40 59 80"
 
 
 def test_insert(TreeWithRootOnly): pass

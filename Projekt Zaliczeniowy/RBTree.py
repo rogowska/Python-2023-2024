@@ -11,21 +11,21 @@ class RBTree:
         self.nil = Node(None, None, None, BLACK)
         self.root = Node(self.nil, self.nil, self.nil, BLACK, root_data)
 
-    def inorder_display(self, root, inorder_str):
+    def inorder_traversal(self, root, inorder_to_list):
         if root is None:
             return
 
-        self.inorder_display(root.left, inorder_str)
-        inorder_str.append(root.data)
-        self.inorder_display(root.right, inorder_str)
-        return
+        self.inorder_traversal(root.left, inorder_to_list)
+        if root.data is not None:
+            inorder_to_list.append(str(root.data))
+        self.inorder_traversal(root.right, inorder_to_list)
 
     # przepisać żeby zwracał string /?/
-    def display(self):
+    def __str__(self):
         """Funkcja zwracająca string wartości węzłów w drzewie w kolejności inorder"""
-        inorder_str = []
-        self.inorder_display(self.root, inorder_str)
-        return inorder_str
+        inorder_to_list = []
+        self.inorder_traversal(self.root, inorder_to_list)
+        return ' '.join(inorder_to_list)
 
     def search(self, data):
         """Funkcja znajdująca węzeł o danej wartości i wracająca ten węzeł jeżeli istnieje, a w przeciwnym
