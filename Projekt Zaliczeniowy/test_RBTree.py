@@ -1,6 +1,11 @@
 import pytest
 from RBTree import RBTree
-from Node import Node
+
+
+def insert_values(tree, list_of_values):
+    for value in list_of_values:
+        tree.insert(value)
+    return tree
 
 
 @pytest.fixture(scope="function")
@@ -13,14 +18,7 @@ def TreeWithRootOnly():
 @pytest.fixture(scope="function")
 def Tree1():
     atree = RBTree(11)
-    atree.insert(5)
-    atree.insert(15)
-    atree.insert(3)
-    atree.insert(54)
-    atree.insert(10)
-    atree.insert(14)
-    atree.insert(21)
-    atree.insert(16)
+    insert_values(atree, [5, 15, 3, 54, 10, 14, 21, 16])
     yield atree
     del atree
 
@@ -28,14 +26,7 @@ def Tree1():
 @pytest.fixture(scope="function")
 def Tree2():
     atree = RBTree(1)
-    atree.insert(59)
-    atree.insert(2)
-    atree.insert(3)
-    atree.insert(32)
-    atree.insert(7)
-    atree.insert(14)
-    atree.insert(40)
-    atree.insert(80)
+    insert_values(atree, [59, 2, 3, 32, 7, 14, 40, 80])
     yield atree
     del atree
 
@@ -46,13 +37,26 @@ def test_display(TreeWithRootOnly, Tree1, Tree2):
     assert str(Tree2) == "1 2 3 7 14 32 40 59 80"
 
 
-def test_insert(TreeWithRootOnly): pass
+def test_insert(TreeWithRootOnly):
+    assert str(TreeWithRootOnly) == "5"
+    TreeWithInsertedValues = insert_values(TreeWithRootOnly, [11])
+    assert str(TreeWithInsertedValues) == "5 11"
+    TreeWithInsertedValues = insert_values(TreeWithInsertedValues, [15, 40])
+    assert str(TreeWithInsertedValues) == "5 11 15 40"
+    TreeWithInsertedValues = insert_values(TreeWithInsertedValues, [3, 10])
+    assert str(TreeWithInsertedValues) == "3 5 10 11 15 40"
+    TreeWithInsertedValues.insert(50)
+    assert str(TreeWithInsertedValues) == "3 5 10 11 15 40 50"
 
 
-def test_delete(): pass
+def test_search(Tree1, Tree2):
+    assert str(Tree1.search(54)) == "54"
+    assert str(Tree1.search(100)) == 'None'
 
 
-def test_search(): pass
+def test_delete(Tree1, Tree2):
+    Tree1.delete(54)
+    assert str(Tree1) == "3 5 10 11 14 15 16 21"
 
 
 def test_minimum(): pass

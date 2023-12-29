@@ -20,7 +20,6 @@ class RBTree:
             inorder_to_list.append(str(root.data))
         self.inorder_traversal(root.right, inorder_to_list)
 
-    # przepisać żeby zwracał string /?/
     def __str__(self):
         """Funkcja zwracająca string wartości węzłów w drzewie w kolejności inorder"""
         inorder_to_list = []
@@ -32,14 +31,15 @@ class RBTree:
         wypadku nil"""
         current_node = self.root
         node_found = self.nil
-        while current_node.data != self.nil or current_node == self.nil:
+        while current_node.data != self.nil.data:
             if current_node.data == data:
                 node_found = current_node
+                return node_found
             elif current_node.data < data:
                 current_node = current_node.right
             else:
                 current_node = current_node.left
-        return node_found
+        return self.nil
 
     def minimum(self, root=None):
         """Funkcja znajdująca węzeł o najmniejszej wartości dla danego drzewa i zwracająca ten węzeł"""
