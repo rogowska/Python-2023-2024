@@ -52,8 +52,11 @@ def test_insert(TreeWithRootOnly):
 def test_search(Tree1, Tree2):
     assert str(Tree1.search(54)) == "54"
     assert str(Tree1.search(100)) == 'None'
+    assert str(Tree2.search(7)) == "7"
+    assert str(Tree2.search(0)) == 'None'
 
-#fix
+
+# fix
 def test_delete(Tree1, Tree2):
     Tree1.delete(54)
     assert str(Tree1) == "3 5 10 11 14 15 16 21"
@@ -76,6 +79,12 @@ def test_successor(Tree1, Tree2):
     assert str(Tree1.successor(node)) == "10"
     node = Tree1.search(54)
     assert str(Tree1.successor(node)) == 'None'
+    node = Tree2.search(32)
+    assert str(Tree2.successor(node)) == "40"
+    node = Tree2.search(1)
+    assert str(Tree2.successor(node)) == "2"
+    node = Tree2.search(80)
+    assert str(Tree2.successor(node)) == 'None'
 
 
 def test_predecessor(): pass
