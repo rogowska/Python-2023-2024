@@ -72,7 +72,7 @@ def test_minimum(Tree1, Tree2, TreeWithRootOnly):
     assert str(Tree2.minimum()) == '1'
     # fix
     node = Tree2.search(59)
-    assert str(Tree1.minimum(node)) == '14'
+    assert str(Tree2.minimum(node)) == '14'
 
 
 def test_maximum(): pass
