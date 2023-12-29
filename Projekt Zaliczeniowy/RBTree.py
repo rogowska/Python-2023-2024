@@ -11,16 +11,21 @@ class RBTree:
         self.nil = Node(None, None, None, BLACK)
         self.root = Node(self.nil, self.nil, self.nil, BLACK, root_data)
 
-    def inorder_display(self, root):
-        if root:
-            self.inorder_display(root.left)
-            print(root.data)
-            self.inorder_display(root.right)
+    def inorder_display(self, root, inorder_str):
+        if root is None:
+            return
+
+        self.inorder_display(root.left, inorder_str)
+        inorder_str.append(root.data)
+        self.inorder_display(root.right, inorder_str)
+        return
 
     # przepisać żeby zwracał string /?/
     def display(self):
-        """Funkcja wyświetlająca wartości węzłów w drzewie w kolejności inorder"""
-        self.inorder_display(self.root)
+        """Funkcja zwracająca string wartości węzłów w drzewie w kolejności inorder"""
+        inorder_str = []
+        self.inorder_display(self.root, inorder_str)
+        return inorder_str
 
     def search(self, data):
         """Funkcja znajdująca węzeł o danej wartości i wracająca ten węzeł jeżeli istnieje, a w przeciwnym
@@ -119,32 +124,40 @@ class RBTree:
 
     def insert_fixup(self, node):
         while node.parent.color == RED:
+            # przypadki, jeżeli rodzic węzła jest lewym dzieckiem
             if node.parent == node.parent.parent.left:
                 y = node.parent.parent.right
+                # przypadek 1
                 if y.color == RED:
                     node.parent.color = BLACK
                     y.color = BLACK
                     node.parent.parent.color = RED
                     node = node.parent.parent
-                elif node == node.parent.right:
-                    node = node.parent
-                    self.left_rotate(node)
-                node.parent.color = BLACK
-                node.parent.parent.color = RED
-                self.right_rotate(node.parent.parent)
+                else:
+                    # przypadek 2, który jest podprzypadkiem przypadku 3
+                    if node == node.parent.right:
+                        node = node.parent
+                        self.left_rotate(node)
+                    # przypadek 3
+                    node.parent.color = BLACK
+                    node.parent.parent.color = RED
+                    self.right_rotate(node.parent.parent)
             else:
+                # analogicznie dla rodzica węzła, jeśli jest on prawym dzieckiem
                 y = node.parent.parent.left
                 if y.color == RED:
                     node.parent.color = BLACK
                     y.color = BLACK
                     node.parent.parent.color = RED
                     node = node.parent.parent
-                elif node == node.parent.left:
-                    node = node.parent
-                    self.right_rotate(node)
-                node.parent.color = BLACK
-                node.parent.parent.color = RED
-                self.left_rotate(node.parent.parent)
+                else:
+                    if node == node.parent.left:
+                        node = node.parent
+                        self.right_rotate(node)
+                    node.parent.color = BLACK
+                    node.parent.parent.color = RED
+                    self.left_rotate(node.parent.parent)
+        self.root.color = BLACK
 
     def insert(self, data_to_insert):
         """Funkcja pozwalająca wstawić węzeł o danej wartości do drzewa"""
@@ -163,7 +176,7 @@ class RBTree:
             self.insert_fixup(new_parent.left)
         else:
             new_parent.right = Node(new_parent, self.nil, self.nil, RED, data_to_insert)
-            self.insert_fixup(new_parent.left)
+            self.insert_fixup(new_parent.right)
 
     def transplant(self, node_to_remove, node_to_transplant):
         if node_to_remove.parent == self.nil:

@@ -20,6 +20,7 @@ def Tree1():
     atree.insert(10)
     atree.insert(14)
     atree.insert(21)
+    atree.insert(16)
     yield atree
     del atree
 
@@ -39,7 +40,10 @@ def Tree2():
     del atree
 
 
-def test_display(): pass
+def test_display(TreeWithRootOnly, Tree1, Tree2):
+    #assert TreeWithRootOnly.display() == "5"
+    assert str(Tree1.display()) == "3 5 10 11 14 15 16 21 54 "
+    assert Tree2.display() == "1 2 3 7 14 32 40 59 80 "
 
 
 def test_insert(TreeWithRootOnly): pass
