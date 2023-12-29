@@ -44,7 +44,6 @@ class RBTree:
         if root is None:
             root = self.root
         minimum = root
-        print(minimum.data)
         while minimum.left != self.nil:
             minimum = minimum.left
         return minimum
