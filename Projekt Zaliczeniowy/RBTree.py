@@ -8,13 +8,13 @@ class RBTree:
     """Klasa reprezentująca drzewo czerwono-czarne."""
 
     def __init__(self, root_data):
+        # self.nil reprezentuje wszystkie liście w drzewie oraz rodzica korzenia
         self.nil = Node(None, None, None, BLACK)
         self.root = Node(self.nil, self.nil, self.nil, BLACK, root_data)
 
     def inorder_traversal(self, root, inorder_to_list):
         if root is None:
             return
-
         self.inorder_traversal(root.left, inorder_to_list)
         if root.data is not None:
             inorder_to_list.append(str(root.data))
@@ -30,11 +30,9 @@ class RBTree:
         """Funkcja znajdująca węzeł o danej wartości i wracająca ten węzeł jeżeli istnieje, a w przeciwnym
         wypadku nil"""
         current_node = self.root
-        node_found = self.nil
         while current_node.data != self.nil.data:
             if current_node.data == data:
-                node_found = current_node
-                return node_found
+                return current_node
             elif current_node.data < data:
                 current_node = current_node.right
             else:
@@ -61,10 +59,10 @@ class RBTree:
 
     def successor(self, node):
         """Funkcja zwracająca następnik węzła przy przeglądaniu węzła w kolejności inorder"""
-        if node.right is not None:
+        if node.right is not self.nil:
             return self.minimum(node.right)
         parent = node.parent
-        while parent is not None:
+        while parent is not self.nil:
             if node != parent.right:
                 break
             node = parent

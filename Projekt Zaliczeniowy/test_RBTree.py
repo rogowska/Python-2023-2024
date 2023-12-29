@@ -53,10 +53,14 @@ def test_search(Tree1, Tree2):
     assert str(Tree1.search(54)) == "54"
     assert str(Tree1.search(100)) == 'None'
 
-
+#fix
 def test_delete(Tree1, Tree2):
     Tree1.delete(54)
     assert str(Tree1) == "3 5 10 11 14 15 16 21"
+    Tree1.delete(5)
+    assert str(Tree1) == "3 10 11 14 15 16 21"
+    Tree2.delete(32)
+    assert str(Tree2) == "1 2 3 7 40 14 59 80"
 
 
 def test_minimum(): pass
@@ -65,7 +69,13 @@ def test_minimum(): pass
 def test_maximum(): pass
 
 
-def test_successor(): pass
+def test_successor(Tree1, Tree2):
+    node = Tree1.search(15)
+    assert str(Tree1.successor(node)) == "16"
+    node = Tree1.search(5)
+    assert str(Tree1.successor(node)) == "10"
+    node = Tree1.search(54)
+    assert str(Tree1.successor(node)) == 'None'
 
 
 def test_predecessor(): pass
