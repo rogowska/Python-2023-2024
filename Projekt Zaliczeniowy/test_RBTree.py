@@ -70,12 +70,28 @@ def test_minimum(Tree1, Tree2, TreeWithRootOnly):
     assert str(TreeWithRootOnly.minimum()) == '5'
     assert str(Tree1.minimum()) == '3'
     assert str(Tree2.minimum()) == '1'
-    # fix
+    node = Tree1.search(21)
+    assert str(Tree1.minimum(node)) == '16'
+    node = Tree1.search(15)
+    assert str(Tree1.minimum(node)) == '14'
     node = Tree2.search(59)
-    assert str(Tree2.minimum(node)) == '14'
+    assert str(Tree1.minimum(node)) == '40'
+    node = Tree2.search(32)
+    assert str(Tree2.minimum(node)) == "3"
 
 
-def test_maximum(): pass
+def test_maximum(Tree1, Tree2, TreeWithRootOnly):
+    assert str(TreeWithRootOnly.maximum()) == '5'
+    assert str(Tree1.maximum()) == '54'
+    assert str(Tree2.maximum()) == '80'
+    node = Tree1.search(5)
+    assert str(Tree1.maximum(node)) == '10'
+    node = Tree1.search(21)
+    assert str(Tree1.maximum(node)) == '54'
+    node = Tree2.search(7)
+    assert str(Tree2.maximum(node)) == '14'
+    node = Tree2.search(3)
+    assert str(Tree2.maximum(node)) == '3'
 
 
 def test_successor(Tree1, Tree2):
