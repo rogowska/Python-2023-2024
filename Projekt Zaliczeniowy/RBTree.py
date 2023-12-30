@@ -3,6 +3,7 @@ from Node import Node
 BLACK = "black"
 RED = "red"
 
+
 class RBTree:
     """Klasa reprezentująca drzewo czerwono-czarne."""
 
@@ -68,7 +69,6 @@ class RBTree:
             parent = parent.parent
         return parent
 
-    # prawdopodobnie do poprawy
     def predecessor(self, node):
         """Funkcja zwracająca poprzednik węzła przy przeglądaniu węzła w kolejności inorder"""
         if node.left is not self.nil:
