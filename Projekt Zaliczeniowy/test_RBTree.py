@@ -47,6 +47,9 @@ def test_insert(TreeWithRootOnly):
     assert str(TreeWithInsertedValues) == "3 5 10 11 15 40"
     TreeWithInsertedValues.insert(50)
     assert str(TreeWithInsertedValues) == "3 5 10 11 15 40 50"
+    with pytest.raises(ValueError) as excinfo:
+        TreeWithInsertedValues.insert(3)
+    assert "Nie można wstawić duplikatu. Spróbuj z inną wartością węzła." in str(excinfo.value)
 
 
 def test_search(Tree1, Tree2):
@@ -65,6 +68,11 @@ def test_delete(Tree1, Tree2, TreeWithRootOnly):
     assert str(Tree2) == "1 2 3 7 14 40 59 80"
     Tree2.delete(14)
     assert str(Tree2) == "1 2 3 7 40 59 80"
+    TreeWithRootOnly.delete(5)
+    assert str(TreeWithRootOnly) == ""
+    with pytest.raises(ValueError) as excinfo:
+        TreeWithRootOnly.delete(50)
+    assert "Nie ma węzła do usunięcia." in str(excinfo.value)
 
 
 def test_minimum(Tree1, Tree2, TreeWithRootOnly):
@@ -123,3 +131,7 @@ def test_predecessor(Tree1, Tree2):
     assert str(Tree2.predecessor(node)) == "59"
     node = Tree2.search(1)
     assert str(Tree2.predecessor(node)) == 'None'
+
+
+if __name__ == '__main__':
+    pytest.main()

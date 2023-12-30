@@ -3,6 +3,7 @@ from Node import Node
 BLACK = "black"
 RED = "red"
 
+
 # dodac zabezpieczenia i stestowac je + readme
 
 class RBTree:
@@ -160,22 +161,29 @@ class RBTree:
 
     def insert(self, data_to_insert):
         """Funkcja pozwalająca wstawić węzeł o danej wartości do drzewa"""
-        # inicjalizacja x i rodzica dla tworzonego węzła
-        x = self.root
-        new_parent = self.nil
-        # przechodzenie przez drzewo przez porównywanie wartości węzłów i szukanie rodzica dla tworzonego węzła
-        while x != self.nil:
-            new_parent = x
-            if data_to_insert < x.data:
-                x = x.left
-            else:
-                x = x.right
-        if data_to_insert < new_parent.data:
-            new_parent.left = Node(new_parent, self.nil, self.nil, RED, data_to_insert)
-            self.insert_fixup(new_parent.left)
+        # sprawdzanie, czy w drzewie nie istnieje już węzeł o danej wartości
+        if self.search(data_to_insert) != self.nil:
+            raise ValueError("Nie można wstawić duplikatu. Spróbuj z inną wartością węzła.")
+        # sprawdzanie, czy root istnieje
+        if self.root == self.nil:
+            self.root = Node(self.nil, self.nil, self.nil, BLACK, data_to_insert)
         else:
-            new_parent.right = Node(new_parent, self.nil, self.nil, RED, data_to_insert)
-            self.insert_fixup(new_parent.right)
+            # inicjalizacja x i rodzica dla tworzonego węzła
+            x = self.root
+            new_parent = self.nil
+            # przechodzenie przez drzewo przez porównywanie wartości węzłów i szukanie rodzica dla tworzonego węzła
+            while x != self.nil:
+                new_parent = x
+                if data_to_insert < x.data:
+                    x = x.left
+                else:
+                    x = x.right
+            if data_to_insert < new_parent.data:
+                new_parent.left = Node(new_parent, self.nil, self.nil, RED, data_to_insert)
+                self.insert_fixup(new_parent.left)
+            else:
+                new_parent.right = Node(new_parent, self.nil, self.nil, RED, data_to_insert)
+                self.insert_fixup(new_parent.right)
 
     def transplant(self, node_to_remove, node_to_transplant):
         if node_to_remove.parent == self.nil:
@@ -233,27 +241,30 @@ class RBTree:
         """Funkcja pozwalająca usunąć węzeł o danej wartości z drzewa"""
         # znalezienie węzła w drzewie o podanej wartości
         y = self.search(data)
-        z = y
-        y_original_color = y.color
-        if z.left == self.nil:
-            x = z.right
-            self.transplant(z, z.right)
-        elif z.right == self.nil:
-            x = z.left
-            self.transplant(z, z.left)
+        if y == self.nil:
+            raise ValueError("Nie ma węzła do usunięcia.")
         else:
-            y = self.minimum(z.right)
+            z = y
             y_original_color = y.color
-            x = y.right
-            if y.parent == z:
-                x.parent = y
+            if z.left == self.nil:
+                x = z.right
+                self.transplant(z, z.right)
+            elif z.right == self.nil:
+                x = z.left
+                self.transplant(z, z.left)
             else:
-                self.transplant(y, y.right)
-                y.right = z.right
-                y.right.parent = y
-            self.transplant(z, y)
-            y.left = z.left
-            y.left.parent = y
-            y.color = z.color
-        if y_original_color == BLACK:
-            self.delete_fixup(x)
+                y = self.minimum(z.right)
+                y_original_color = y.color
+                x = y.right
+                if y.parent == z:
+                    x.parent = y
+                else:
+                    self.transplant(y, y.right)
+                    y.right = z.right
+                    y.right.parent = y
+                self.transplant(z, y)
+                y.left = z.left
+                y.left.parent = y
+                y.color = z.color
+            if y_original_color == BLACK:
+                self.delete_fixup(x)
