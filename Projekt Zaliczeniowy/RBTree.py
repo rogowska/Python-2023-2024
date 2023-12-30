@@ -3,9 +3,6 @@ from Node import Node
 BLACK = "black"
 RED = "red"
 
-
-# dodac zabezpieczenia i stestowac je + readme
-
 class RBTree:
     """Klasa reprezentująca drzewo czerwono-czarne."""
 
