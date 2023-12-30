@@ -93,4 +93,16 @@ def test_successor(Tree1, Tree2):
     assert str(Tree2.successor(node)) == 'None'
 
 
-def test_predecessor(): pass
+def test_predecessor(Tree1, Tree2):
+    node = Tree1.search(15)
+    assert str(Tree1.predecessor(node)) == "14"
+    node = Tree1.search(5)
+    assert str(Tree1.predecessor(node)) == "3"
+    node = Tree1.search(3)
+    assert str(Tree1.predecessor(node)) == 'None'
+    node = Tree2.search(32)
+    assert str(Tree2.predecessor(node)) == "14"
+    node = Tree2.search(80)
+    assert str(Tree2.predecessor(node)) == "59"
+    node = Tree2.search(1)
+    assert str(Tree2.predecessor(node)) == 'None'

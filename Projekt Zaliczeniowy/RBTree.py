@@ -72,10 +72,10 @@ class RBTree:
     # prawdopodobnie do poprawy
     def predecessor(self, node):
         """Funkcja zwracająca poprzednik węzła przy przeglądaniu węzła w kolejności inorder"""
-        if node.left is not None:
+        if node.left is not self.nil:
             return self.maximum(node.left)
         parent = node.parent
-        while parent is not None:
+        while parent is not self.nil:
             if node == parent.right:
                 break
             node = parent
