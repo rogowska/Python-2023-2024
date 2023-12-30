@@ -56,14 +56,15 @@ def test_search(Tree1, Tree2):
     assert str(Tree2.search(0)) == 'None'
 
 
-# fix
-def test_delete(Tree1, Tree2):
+def test_delete(Tree1, Tree2, TreeWithRootOnly):
     Tree1.delete(54)
     assert str(Tree1) == "3 5 10 11 14 15 16 21"
     Tree1.delete(5)
     assert str(Tree1) == "3 10 11 14 15 16 21"
     Tree2.delete(32)
-    assert str(Tree2) == "1 2 3 7 40 14 59 80"
+    assert str(Tree2) == "1 2 3 7 14 40 59 80"
+    Tree2.delete(14)
+    assert str(Tree2) == "1 2 3 7 40 59 80"
 
 
 def test_minimum(Tree1, Tree2, TreeWithRootOnly):
