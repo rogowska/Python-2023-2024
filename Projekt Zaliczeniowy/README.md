@@ -1,4 +1,4 @@
-Projekt zaliczeniowy
+##Projekt zaliczeniowy
 "Implementacja drzew czerwono-czarnych"
 Python 23/24
 Oliwia Rogowska
@@ -31,4 +31,4 @@ W klasie RBTree znajdują się metody:
 8. __insert__ - funkcja pozwalająca wstawić węzeł o danej wartości do drzewa.
 9. __delete__ - funkcja pozwalająca usunąć węzeł o danej wartości z drzewa.
 
-Delete oraz insert oraz funkcje pomocnicze do tych metod zostały zaimplementowane na podstawie książki "Wprowadzenie do algorytmów" T. H. Cormena.
+Delete, insert oraz funkcje pomocnicze do tych metod zostały zaimplementowane na podstawie książki "Wprowadzenie do algorytmów" T. H. Cormena.
