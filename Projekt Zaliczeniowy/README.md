@@ -1,7 +1,7 @@
 ## Projekt zaliczeniowy
-"Implementacja drzew czerwono-czarnych"
-Python 23/24
-Oliwia Rogowska
+# "Implementacja drzew czerwono-czarnych"
+# Python 23/24
+# Oliwia Rogowska
 
 Drzewa czerwono czarne to drzewa wyszukiwań binarnych, które spełniają
 następujące warunki:
