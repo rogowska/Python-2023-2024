@@ -45,7 +45,4 @@ Usuwanie (__delete__) korzysta z funkcji pomocniczej __transplant__ która pozwa
 
 Po wszystkich wywołaniach funkcji __transplant__ należy wywołać funcję pomocniczą, która pozwoli na skorygowanie drzewa (rekoloryzacja węzłów i rotacje) tak aby drzewo zachowywało swoje własności.
 
-
-Delete oraz insert oraz funkcje pomocnicze do tych metod zostały zaimplementowane na podstawie książki "Wprowadzenie do algorytmów" T. H. Cormena.
-
 Delete, insert oraz funkcje pomocnicze do tych metod zostały zaimplementowane na podstawie książki "Wprowadzenie do algorytmów" T. H. Cormena.
